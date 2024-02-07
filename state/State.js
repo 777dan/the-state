@@ -7,7 +7,7 @@ const data = {
 
 // const jsonString = JSON.stringify(jsonData);
 // const parsedData = JSON.parse(jsonString);
-console.log(data.population);
+// console.log(data.population);
 
 export class State {
     constructor(population, mood = 0.5, utsNum, villageNum, cityNum) {
@@ -17,23 +17,28 @@ export class State {
         this.villageNum = villageNum;
         this.cityNum = cityNum;
     }
-    changePopulation() {
-        const increaseAmount = (this.population * (this.mood * 0.0004)) / 100;
-        const increasedNumber = this.population + increaseAmount;
-        console.log(Math.floor(increaseAmount));
-        this.population = Math.floor(increasedNumber);
-        return this.population;
+    changePop(settlementsArr) {
+        for (let i = 0; i < settlementsArr.length; i++) {
+            const increaseAmount = (settlementsArr[i] * (Math.random() * 0.4) + 0.1) / 100;
+            const increasedNumber = settlementsArr[i] + increaseAmount;
+            settlementsArr[i] = Math.ceil(increasedNumber);
+        }
+        // console.log(settlementsArr);
+        let totalPop = settlementsArr.reduce((a, b) => a + b, 0);
+        return totalPop;
     }
     changeMood() {
         this.mood = 0.6;
         // return this.mood;
     }
-    generateSettlement(numOfsettlements, settlements = [], min, max) {
-        for (let i = 0; i < numOfsettlements; i++) {
-            let settlementPopulation = Math.floor(Math.random() * (max - min)) + min;
-            settlements.push(settlementPopulation);
+    genSettlements(settlementCount, minPop, maxPop) {
+        let settlementsArr = [];
+        for (let i = 0; i < settlementCount; i++) {
+            let settlementPop = Math.floor(Math.random() * (maxPop - minPop)) + minPop;
+            settlementsArr.push(settlementPop);
         }
-        console.log(settlements);
-        return settlements;
+        // console.log(settlementsArr);
+        let totalPop = settlementsArr.reduce((a, b) => a + b, 0);
+        return [settlementsArr, totalPop];
     }
 }

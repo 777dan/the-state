@@ -6,9 +6,9 @@ const populationDisplay = document.querySelector('#population-display');
 const utsNumDisplay = document.querySelector('#uts-num-display');
 const villageNumDisplay = document.querySelector('#village-num-display');
 const cityNumDisplay = document.querySelector('#city-num-display');
-const villagePopulationDisplay = document.querySelector('#village-population-display');
-const utsPopulationDisplay = document.querySelector('#uts-population-display');
-const cityPopulationDisplay = document.querySelector('#city-population-display');
+const villagePopDisplay = document.querySelector('#village-population-display');
+const utsPopDisplay = document.querySelector('#uts-population-display');
+const cityPopDisplay = document.querySelector('#city-population-display');
 
 
 class Statistics extends State {
@@ -16,40 +16,35 @@ class Statistics extends State {
     super(population, mood, utsNum, villageNum, cityNum);
   }
 
-  showPopulation = () => {
+  showPopulation = (villagePop, utsPop, cityPop) => {
     populationDisplay.textContent = this.population.toLocaleString("en-US");
-    // this.changePopulation();
+    villagePopDisplay.textContent = villagePop;
+    utsPopDisplay.textContent = utsPop;
+    cityPopDisplay.textContent = cityPop;
   }
-  showNumOfsettlements = () => {
+  showsettlementsCount = () => {
     utsNumDisplay.textContent = this.utsNum.toLocaleString("en-US");
     villageNumDisplay.textContent = this.villageNum.toLocaleString("en-US");
     cityNumDisplay.textContent = this.cityNum.toLocaleString("en-US");
   }
-  showPopulationOfsettlements = (settlementsNum, min, max, populationDisplay) => {
-    let settlementArr = this.generateSettlement(settlementsNum, [], min, max);
-    let totalPopulation = settlementArr.reduce((a, b) => a + b, 0);
-    populationDisplay.textContent = totalPopulation.toLocaleString("en-US");
-    return totalPopulation;
-  }
 }
 
 let statistics = new Statistics(995, 0.5, 34, 670, 12);
-statistics.showNumOfsettlements();
 
-let utsPopulation = statistics.showPopulationOfsettlements(statistics.utsNum, 4000, 8000, utsPopulationDisplay);
-let villagePopulation = statistics.showPopulationOfsettlements(statistics.villageNum, 5, 3000, villagePopulationDisplay);
-let cityPopulation = statistics.showPopulationOfsettlements(statistics.cityNum, 10000, 1000000, cityPopulationDisplay);
-let totalPopulation = utsPopulation + villagePopulation + cityPopulation;
-statistics.population = totalPopulation;
+let villageData = statistics.genSettlements(statistics.villageNum, 5, 300);
+let utsData = statistics.genSettlements(statistics.utsNum, 4000, 8000);
+let cityData = statistics.genSettlements(statistics.cityNum, 9000, 1000000);
+statistics.population = villageData[1] + utsData[1] + cityData[1];
+statistics.showPopulation(villageData[1], utsData[1], cityData[1]);
+statistics.showsettlementsCount();
 
-statistics.showPopulation();
 setInterval(() => {
-  statistics.showPopulation();
-  statistics.changePopulation(villagePopulation);
-  statistics.changePopulation(cityPopulation);
-  statistics.changePopulation(utsPopulation);
-}
-  , 1000);
+  let villagePop = statistics.changePop(villageData[0]);
+  let utsPop = statistics.changePop(utsData[0]);
+  let cityPop = statistics.changePop(cityData[0]);
+  statistics.population = villagePop + utsPop + cityPop;
+  statistics.showPopulation(villagePop, utsPop, cityPop);
+}, 1000);
 setTimeout(() => statistics.changeMood(), 5000);
 
 // document.querySelector('#show-statistics-btn').addEventListener('click', () => {
