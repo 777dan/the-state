@@ -10,7 +10,7 @@ const data = {
 // console.log(data.population);
 
 export class State {
-    constructor(population, mood = 0.5, utsNum, villageNum, cityNum) {
+    constructor(population, mood = 50, utsNum, villageNum, cityNum) {
         this.population = population;
         this.mood = mood;
         this.utsNum = utsNum;
@@ -18,17 +18,24 @@ export class State {
         this.cityNum = cityNum;
     }
     changePop(settlementsArr) {
+        let born = 0;
+        let dead = 0;
         for (let i = 0; i < settlementsArr.length; i++) {
-            const increaseAmount = (settlementsArr[i] * (Math.random() * 0.4) + 0.1) / 100;
-            const increasedNumber = settlementsArr[i] + increaseAmount;
-            settlementsArr[i] = Math.ceil(increasedNumber);
+            const increasedPop = Math.ceil(settlementsArr[i] * ((this.mood * 0.00001) + 1));
+            born += increasedPop - settlementsArr[i];
+            settlementsArr[i] = increasedPop;
+
+            const decreasedPop = Math.ceil(settlementsArr[i] - ((settlementsArr[i] * 0.00005)));
+            dead += Math.ceil(settlementsArr[i] * 0.00005)
+            settlementsArr[i] = decreasedPop;
         }
         // console.log(settlementsArr);
         let totalPop = settlementsArr.reduce((a, b) => a + b, 0);
-        return totalPop;
+        // console.log(born, dead)
+        return [totalPop, born, dead];
     }
     changeMood() {
-        this.mood = 0.6;
+        this.mood = 60;
         // return this.mood;
     }
     genSettlements(settlementCount, minPop, maxPop) {
