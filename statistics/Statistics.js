@@ -35,7 +35,7 @@ class Statistics extends State {
   }
 }
 
-let statistics = new Statistics(995, 0.5, 34, 670, 12);
+let statistics = new Statistics(995, 60, 34, 670, 12);
 
 let villageData = statistics.genSettlements(statistics.villageNum, 5, 300);
 let utsData = statistics.genSettlements(statistics.utsNum, 4000, 8000);
@@ -51,11 +51,10 @@ setInterval(() => {
   statistics.population = villagePop[0] + utsPop[0] + cityPop[0];
   let born = villagePop[1] + utsPop[1] + cityPop[1];
   let dead = villagePop[2] + utsPop[2] + cityPop[2];
-  console.log(villagePop[1], dead)
   statistics.showPopulation(villagePop[0], utsPop[0], cityPop[0]);
   statistics.showBornAndDead(born, dead);
 }, 1000);
-setTimeout(() => statistics.changeMood(), 5000);
+// setTimeout(() => statistics.changeMood(), 5000);
 
 // document.querySelector('#show-statistics-btn').addEventListener('click', () => {
 //   statistics.showPopulation();
